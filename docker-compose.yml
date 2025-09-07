@@ -1,0 +1,40 @@
+services:
+  # Production admin - no external ports (access only through nginx)
+  admin:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: nirvana_admin
+    environment:
+      - VITE_API_BASE=${VITE_API_BASE:-http://nirvana_backend:8000}
+    env_file:
+      - .env
+    networks:
+      - nirvana_network
+
+  # Development admin - with hot reloading port
+  admin-dev:
+    build:
+      context: .
+      dockerfile: Dockerfile.dev
+    container_name: nirvana_admin_dev
+    ports:
+      - "5175:5175"
+    volumes:
+      - ./spa:/app/spa
+      - nirvana_admin_node_modules_cache:/app/spa/node_modules
+    environment:
+      - VITE_API_BASE=${VITE_API_BASE:-http://localhost:8000}
+    env_file:
+      - .env
+    networks:
+      - nirvana_network
+
+
+volumes:
+  nirvana_admin_node_modules_cache:
+
+networks:
+  nirvana_network:
+    name: nirvana_network
+    external: true
