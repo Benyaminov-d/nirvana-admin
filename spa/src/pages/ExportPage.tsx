@@ -40,6 +40,7 @@ export default function ExportPage() {
   const [excludeOpen, setExcludeOpen] = useState(false);
   const [exclude, setExclude] = useState('');
   const [sort, setSort] = useState('name_asc');
+  const [instrumentTypes, setInstrumentTypes] = useState('Mutual Fund,ETF');
   const [cols, setCols] = useState<ColumnsToggle>({
     as_of: true,
     start_date: true,
@@ -62,6 +63,7 @@ export default function ExportPage() {
     const levels = [alpha50 && '50', alpha95 && '95', alpha99 && '99'].filter(Boolean).join(',');
     if (levels) parts.push(`levels=${levels}`);
     if (symbols.trim() && symbols.trim().toLowerCase() !== 'all') parts.push(`products=${encodeURIComponent(symbols.trim())}`);
+    if (instrumentTypes.trim()) parts.push(`instrument_types=${encodeURIComponent(instrumentTypes.trim())}`);
     if (latest) parts.push('latest=1');
     if (oneRow) parts.push('one_row=1');
     if (worstOnly) parts.push('worst_only=1');
@@ -113,6 +115,10 @@ export default function ExportPage() {
           <label className="block mb-3">
             <div className="text-xs text-gray-300 mb-1 uppercase tracking-wider">Tickers (comma-separated), 'all' or '5STARS' / '5STARSUS' / '5STARSCA'</div>
             <input value={symbols} onChange={(e)=>setSymbols(e.target.value)} className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-600 rounded" placeholder="all | 5STARS | 5STARSUS | 5STARSCA | e.g. BTC,ETH,SP500TR" />
+          </label>
+          <label className="block mb-3">
+            <div className="text-xs text-gray-300 mb-1 uppercase tracking-wider">Instrument types (comma-separated)</div>
+            <input value={instrumentTypes} onChange={(e)=>setInstrumentTypes(e.target.value)} className="w-full px-3 py-2 bg-[#2d2d2d] border border-gray-600 rounded" placeholder="Mutual Fund,ETF" />
           </label>
           <div className="mb-3">
             <div className="text-xs text-gray-400 mb-1">CVaR by levels</div>
